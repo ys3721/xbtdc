@@ -6,10 +6,10 @@
  * User Manual available at https://docs.gradle.org/5.2.1/userguide/tutorial_java_projects.html
  */
 
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
     // Apply the application plugin to add support for building an application
     id 'application'
 }
@@ -17,16 +17,26 @@ plugins {
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+    google()
     jcenter()
 }
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation 'com.google.guava:guava:27.0.1-jre'
-
+    implementation "net.sf.json-lib:json-lib:2.4:jdk15"
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
 
 // Define the main class for the application
 mainClassName = 'cn.alip8.App'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+
+}

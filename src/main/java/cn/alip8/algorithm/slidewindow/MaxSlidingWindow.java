@@ -8,12 +8,6 @@ import java.util.LinkedList;
  */
 public class MaxSlidingWindow {
 
-    /**
-     * 没啥可说的 最大滑动窗口
-     * @param nums
-     * @param k
-     * @return
-     */
     public int[] brutalMaxSlidingWindow(int[] nums, int k) {
         if (nums.length <= 0) {
             return new int[0];
@@ -57,6 +51,34 @@ public class MaxSlidingWindow {
             }
         }
         return res;
+    }
+
+    public int[] maxSlidingWindow0(int[] nums, int k) {
+        if (nums == null || nums.length < k || k < 1) {
+            return new int[0];
+        }
+        int[] res = new int[nums.length - k + 1];
+        int index = 0;
+        LinkedList<Integer> dqMax = new LinkedList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            while (!dqMax.isEmpty() && nums[dqMax.peekLast()] <= nums[i]) {
+                dqMax.pollLast();
+            }
+            dqMax.add(i);
+            if (dqMax.peekFirst() == i - k) {
+                dqMax.pollFirst();
+            }
+
+            if (i >= k - 1) {
+                res[index++] = nums[dqMax.peekFirst()];
+            }
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }
