@@ -1,6 +1,10 @@
 package cn.alip8.util;
 
+import java.sql.Array;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author: Yao Shuai
@@ -32,5 +36,21 @@ public class AlgorithmTestUtils {
         int[] arr = generateArray(maxLen, max, needNegative);
         Arrays.sort(arr);
         return arr;
+    }
+
+    public static int[] genLargeThenZeroNoRepeat(int maxLen, int max) {
+        int[] arr = generateArray(maxLen, max, false);
+        Set<Integer> set = new TreeSet<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > 0) {
+                set.add(arr[i]);
+            }
+        }
+        int[] noRepeat = new int[set.size()];
+        int i = 0;
+        for (Iterator<Integer> it = set.iterator(); it.hasNext(); ) {
+            noRepeat[i++] = it.next();
+        }
+        return noRepeat;
     }
 }

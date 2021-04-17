@@ -110,8 +110,27 @@ public class CordCoverMaxPoint {
         return result;
     }
 
+    //[277, 371, 374, 701, 749, 911]
     public static int maxPoint2(int[] arr, int l) {
-        return 0;
+        int maxPointCount = 0;
+        int high = 0;
+        for (int low = 0; low < arr.length; low++) {
+            if (high < low) {
+                high = low;
+            }
+            high = findHighIndex(arr, low, high, l);
+            if (maxPointCount < high - low + 1) {
+                maxPointCount = high - low + 1;
+            }
+        }
+        return maxPointCount;
+    }
+
+    private static int findHighIndex(int[] arr, int low, int high, int l) {
+        while (high + 1 < arr.length && arr[high + 1] - arr[low] <= l) {
+            high++;
+        }
+        return high;
     }
 
     public static int maxPoint3(int[] arr, int l) {
