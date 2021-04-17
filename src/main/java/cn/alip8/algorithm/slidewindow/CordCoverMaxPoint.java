@@ -54,7 +54,8 @@ public class CordCoverMaxPoint {
         int maxPoint = 0;
         for (int i = 0; i < arr.length; i++) {
             int maxRange = arr[i] - l;
-            int curMaxPoint = i - binaryFindMaxIndex(maxRange) + 1;
+            int farIndex = binaryFindMaxIndex(arr, i, maxRange);
+            int curMaxPoint = i - farIndex + 1;
             if (maxPoint < curMaxPoint) {
                 maxPoint = curMaxPoint;
             }
@@ -65,14 +66,27 @@ public class CordCoverMaxPoint {
     /**
      * 查找数组中第一个比maxrange大的点索引
      *
-     * @param maxRange
      * @return
      */
-    private static int binaryFindMaxIndex(int[] arr, int endIndex, int maxRange) {
-        if (endIndex <= 0) {
-
+    private static int binaryFindMaxIndex(int[] arr, int limitIndex, int target) {
+        if (limitIndex <= 0) {
+            return limitIndex;
         }
-        return 0;
+        int low = 0;
+        int high = limitIndex;
+        int farCoverIndex = limitIndex;
+        while (low <= high) {
+            int middle = low + ((high - low) >> 1);
+            if (target > arr[middle]) {
+                low = middle + 1;
+            } else if (target < arr[middle]) {
+                high = middle - 1;
+            } else {
+               return middle;
+            }
+        }
+        farCoverIndex = low;
+        return farCoverIndex;
     }
 
     private static int binarySearch(int[] arr, int target) {
@@ -93,7 +107,7 @@ public class CordCoverMaxPoint {
                 break;
             }
         }
-        return midIndex;
+        return result;
     }
 
     public static int maxPoint2(int[] arr, int l) {

@@ -18,7 +18,7 @@ public class AlgorithmTestUtilsTest {
         int maxLen = random.nextInt(100000);
         int maxValue = Math.abs(random.nextInt());
         boolean needNegative = Math.random() > 0.5f;
-        for (int j = 0; j < 10000; j++) {
+        for (int j = 0; j < 1; j++) {
             int[] arr = AlgorithmTestUtils.generateArray(maxLen, maxValue, needNegative);
             Assert.assertTrue("长度居然比最大长度都长了 array length = " + arr.length,
                     arr.length <= maxLen);
@@ -39,7 +39,7 @@ public class AlgorithmTestUtilsTest {
         int maxLen = random.nextInt((int) Math.pow(2, 20)) + 100000;
         int maxValue = Math.abs(random.nextInt(99999));
         boolean needNegative = Math.random() > 0.5f;
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 1; j++) {
             int[] arr = AlgorithmTestUtils.generateArray(maxLen, maxValue, needNegative);
             Assert.assertTrue("长度居然比最大长度都长了 array length = " + arr.length,
                     arr.length <= maxLen);
