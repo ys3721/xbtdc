@@ -14,6 +14,7 @@ public class MaximalSquareTest {
 
     @Test
     public void testMaximalSquare() {
+        //String square = "[[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"]]";
         String square = "[[\"1\",\"0\",\"1\",\"0\",\"0\"],[\"1\",\"0\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"0\",\"0\",\"1\",\"0\"]]";
         JSONArray jsonArray = JSONArray.fromObject(square);
         int x  = jsonArray.size();
@@ -24,7 +25,8 @@ public class MaximalSquareTest {
                 squareChar[i][j] = jsonArray.getJSONArray(i).getString(j).charAt(0);
             }
         }
-        Assert.assertTrue(MaximalSquare.bruteMalSolution(squareChar) == 4);
+        int maxBianchang = MaximalSquare.bruteMalSolutionQuestion1(squareChar);
+        Assert.assertTrue(   maxBianchang+"" ,maxBianchang==2);
     }
 
 
