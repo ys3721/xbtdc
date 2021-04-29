@@ -25,7 +25,7 @@ public class MaximalSquareTest {
                 squareChar[i][j] = jsonArray.getJSONArray(i).getString(j).charAt(0);
             }
         }
-        int maxBianchang = MaximalSquare.bruteMalSolutionQuestion1(squareChar);
+        int maxBianchang = MaximalSquare.bruteMalSolutionQuestion1(null);
         Assert.assertTrue(   maxBianchang+"" ,maxBianchang==2);
     }
 
