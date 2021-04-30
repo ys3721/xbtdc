@@ -23,20 +23,15 @@ public class Thread1A2BQuestTest {
     public void testAltExec() throws Exception {
         System.setOut(new PrintStream(outContent1));
         Thread1A2B3CQuestion question = new Thread1A2B3CQuestion();
-        int testCount = 100;
-        int printLength = 100;
+        int printLength = 1000000;
         long beginTime = System.currentTimeMillis();
-        for (int i = 0; i < testCount; i++) {
-            question.singleThreadImpl(printLength);
-        }
-        System.err.print(String.format("SingleThread is finished user %d wait two thead begin..", System.currentTimeMillis() - beginTime));
+        question.singleThreadImpl(printLength);
+        System.err.println(String.format("SingleThread is finished user %d wait two thead begin..", System.currentTimeMillis() - beginTime));
         beginTime = System.currentTimeMillis();
         System.setOut(new PrintStream(outContent2));
-        for (int i = 0; i < testCount ; i++) {
-            question.alternateExecute(printLength);
-        }
-        System.err.print(String.format("Two thread is finished use time mills %d .", System.currentTimeMillis() - beginTime));
-        Assert.assertTrue(outContent1.toString()+"--"+outContent2.toString(), outContent1.toString().equals(outContent2.toString()));
+        question.alternateExecute(printLength);
+        System.err.println(String.format("Two thread is finished use time mills %d .", System.currentTimeMillis() - beginTime));
+        Assert.assertTrue(outContent1.toString()+"\r\n"+outContent2.toString(), outContent1.toString().equals(outContent2.toString()));
     }
 
     @Before

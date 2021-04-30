@@ -44,6 +44,7 @@ public class Thread1A2B3CQuestion {
         t1.start();
         t2.start();
         LockSupport.unpark(t1);
+        //为了测试代码结束
         t1.join();
         t2.join();
     }
