@@ -1,8 +1,7 @@
 package cn.alip8.juc;
 
-import java.lang.reflect.Array;
+import java.lang.Thread.State;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.concurrent.locks.LockSupport;
 
 /**
@@ -49,6 +48,58 @@ public class Thread1A2B3CQuestion {
         t2.join();
     }
 
+    public void waitNotifyExecute(int printLength) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < printLength; i++) {
+                    //use nums as a lock
+                    System.out.print(nums[i % 10]);
+                    synchronized (nums) {
+                        nums.notify();
+                    }
+                    try {
+                        synchronized (alpha) {
+                            alpha.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+                for(int i = 0; i < printLength; i++) {
+                    try {
+                        synchronized(nums) {
+                            nums.wait();
+                            synchronized (alpha) {
+                                System.out.print(alpha[i % 10]);
+                                alpha.notify();
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }, "waitNotifyT2");
+
+        t2.start();
+        //Only t2 is wait the lock of nums, then t1 begin start.
+        while (t2.getState() != State.WAITING) {
+            //loop
+        }
+        t1.start();
+        //Test case need the t1 and t2 finish
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     class PackPrintRunner implements Runnable{
 
         private int index = 0;
@@ -71,9 +122,13 @@ public class Thread1A2B3CQuestion {
                 LockSupport.park();
                 System.out.print(contendChars[index++ % 10]);
                 LockSupport.unpark(otherThread);
-
             }
 
         }
+    }
+
+    public static void main(String[] args) {
+        Thread1A2B3CQuestion a2B3CQuestion = new Thread1A2B3CQuestion();
+        a2B3CQuestion.waitNotifyExecute(1000);
     }
 }
