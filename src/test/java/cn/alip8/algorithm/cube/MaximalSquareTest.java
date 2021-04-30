@@ -20,13 +20,15 @@ public class MaximalSquareTest {
         int x  = jsonArray.size();
         int y = jsonArray.getJSONArray(0).size();
         char[][] squareChar = new char[x][y];
+        int[][] grib = new int[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y ; j++) {
                 squareChar[i][j] = jsonArray.getJSONArray(i).getString(j).charAt(0);
+                grib[i][j] = Integer.parseInt(jsonArray.getJSONArray(i).getString(j));
             }
         }
-        int maxBianchang = MaximalSquare.bruteMalSolutionQuestion1(squareChar);
-        Assert.assertTrue(   maxBianchang+"" ,maxBianchang==2);
+        int maxBianchang = MaximalSquare.bruteMalSolutionQuestion1(grib);
+        Assert.assertTrue(   maxBianchang+"" ,maxBianchang==2*2);
     }
 
 
