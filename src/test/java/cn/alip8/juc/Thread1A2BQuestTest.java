@@ -41,7 +41,7 @@ public class Thread1A2BQuestTest {
         question.waitNotifyExecute(printLength);
         System.err.println(String.format("Wait notify is finished use time mills %d .",
                 System.currentTimeMillis() - beginTime));
-        Assert.assertTrue(outContent1.toString() + "\r\n" + outContent2.toString(),
+        Assert.assertTrue(outContent1.toString() + "\r\n" + outContent2.toString()+ "\r\n" + outContent3.toString(),
                 outContent1.toString().equals(outContent2.toString()) &&
                         outContent1.toString().equals(outContent3.toString())
                 );

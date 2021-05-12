@@ -48,56 +48,60 @@ public class Thread1A2B3CQuestion {
         t2.join();
     }
 
+    public volatile boolean numberTurn = true;
+
     public void waitNotifyExecute(int printLength) {
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < printLength; i++) {
-                    //use nums as a lock
-                    System.out.print(nums[i % 10]);
-                    synchronized (nums) {
-                        nums.notify();
-                    }
-                    try {
-                        synchronized (alpha) {
-                            alpha.wait();
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        Thread t2 = new Thread(() -> {
-                for(int i = 0; i < printLength; i++) {
-                    try {
-                        synchronized(nums) {
-                            nums.wait();
-                            synchronized (alpha) {
-                                System.out.print(alpha[i % 10]);
-                                alpha.notify();
+                    synchronized(Thread1A2B3CQuestion.this) {
+                        while (!numberTurn) {
+                            try {
+                                Thread1A2B3CQuestion.this.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.print(nums[i % 10]);
+                        numberTurn  = false;
+                        Thread1A2B3CQuestion.this.notify();
                     }
                 }
-        }, "waitNotifyT2");
 
-        t2.start();
-        //Only t2 is wait the lock of nums, then t1 begin start.
-        while (t2.getState() != State.WAITING) {
-            //loop
-        }
+            }
+        },"t1");
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < printLength; i++) {
+                    synchronized(Thread1A2B3CQuestion.this) {
+                        while (numberTurn) {
+                            try {
+                                Thread1A2B3CQuestion.this.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        System.out.print(alpha[i % 10]);
+                        numberTurn  = true;
+                        Thread1A2B3CQuestion.this.notify();
+                    }
+                }
+
+            }
+        },"t2");
         t1.start();
-        //Test case need the t1 and t2 finish
+        t2.start();
+
         try {
             t1.join();
             t2.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     class PackPrintRunner implements Runnable{
