@@ -3,65 +3,30 @@ package cn.alip8.io.proxy;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 /**
  * @author yaoshuai
  * @date 2021-五月-16
  */
-public class OutServerHandler extends ChannelInboundHandler {
+public class OutServerHandler extends ChannelInboundHandlerAdapter {
 
-    @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-
-    }
+    private MiddleService middleService;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
+        //如果建立了链接那么也去对面建立链接，但是对面是内网，通知不过去，只能先建立通知的链接
+        InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
+        middleService.sendConnectionMsg(address.getHostName(), address.getPort());
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ctx.fireChannelRead(msg);
 
     }
 
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
-    }
-
-    @Override
-    public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-
-    }
 }
