@@ -7,8 +7,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,13 +18,13 @@ import org.apache.commons.logging.LogFactory;
 public class HexDumpProxy {
 
     static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "7999"));
-    static final String REMOTE_HOST = System.getProperty("remoteHost", "localhost");
-    static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "8080"));
+    static final String REMOTE_HOST = System.getProperty("remoteHost", "119.29.197.61");
+    static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "9090"));
 
-    private static Log logger = LogFactory.getLog("hexproxy");
+    private static final Logger logger = LoggerFactory.getLogger("hexproxy");
 
     public static void main(String[] args) throws Exception {
-        logger.debug("Proxying *:" + LOCAL_PORT +" to " + REMOTE_HOST+" : " +REMOTE_PORT + "...");
+        logger.debug("Proxying *:" + LOCAL_PORT +" to " + REMOTE_HOST+":" +REMOTE_PORT + "...");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
