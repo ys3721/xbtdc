@@ -3,14 +3,9 @@ package cn.alip8.io.hexproxy;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-/**
- * @author: Yao Shuai
- * @date: 2021/5/17 21:07
- */
 public class HexDumpProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
     private final Channel inboundChannel;
@@ -20,17 +15,17 @@ public class HexDumpProxyBackendHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         ctx.read();
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(final ChannelHandlerContext ctx, Object msg) {
         inboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
+            public void operationComplete(ChannelFuture future) {
                 if (future.isSuccess()) {
-                    future.channel().read();
+                    ctx.channel().read();
                 } else {
                     future.channel().close();
                 }
@@ -39,13 +34,13 @@ public class HexDumpProxyBackendHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        HexDumpProxyFrountendHandler.closeOnFlush(inboundChannel);
+    public void channelInactive(ChannelHandlerContext ctx) {
+        HexDumpProxyFrontendHandler.closeOnFlush(inboundChannel);
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        HexDumpProxyFrountendHandler.closeOnFlush(ctx.channel());
+        HexDumpProxyFrontendHandler.closeOnFlush(ctx.channel());
     }
 }

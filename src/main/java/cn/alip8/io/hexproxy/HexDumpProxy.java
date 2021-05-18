@@ -7,34 +7,25 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+public final class HexDumpProxy {
 
-/**
- * @author: Yao Shuai
- * @date: 2021/5/17 15:22
- */
-public class HexDumpProxy {
-
-    static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "7999"));
+    static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "8084"));
     static final String REMOTE_HOST = System.getProperty("remoteHost", "119.29.197.61");
     static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "9090"));
 
-    private static final Logger logger = LoggerFactory.getLogger("hexproxy");
-
     public static void main(String[] args) throws Exception {
-        logger.debug("Proxying *:" + LOCAL_PORT +" to " + REMOTE_HOST+":" +REMOTE_PORT + "...");
+        System.err.println("Proxying *:" + LOCAL_PORT + " to " + REMOTE_HOST + ':' + REMOTE_PORT + " ...");
 
+        // Configure the bootstrap.
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.DEBUG))
-                    .childHandler(new HexDumpProxyuInitializer(REMOTE_HOST, REMOTE_PORT))
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new HexDumpProxyInitializer(REMOTE_HOST, REMOTE_PORT))
                     .childOption(ChannelOption.AUTO_READ, false)
                     .bind(LOCAL_PORT).sync().channel().closeFuture().sync();
         } finally {

@@ -6,9 +6,9 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework.web" level="ERROR"/>
+        <Logger name="org.springframework.web" level="DEBUG"/>
         <Logger name="hexproxy" level="DEBUG" />
-        <Root level="error">
+        <Root level="Debug">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

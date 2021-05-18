@@ -2,17 +2,13 @@ package cn.alip8.io.hexproxy;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http2.Http2StreamFrameToHttpObjectCodec;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-/**
- * @author: Yao Shuai
- * @date: 2021/5/17 20:15
- */
 public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
 
     private final String remoteHost;
-
     private final int remotePort;
 
     public HexDumpProxyInitializer(String remoteHost, int remotePort) {
@@ -21,7 +17,9 @@ public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
     }
 
     @Override
-    protected void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG), new HexDumpProxyFrountendHandler(remoteHost, remotePort));
+    public void initChannel(SocketChannel ch) {
+        ch.pipeline().addLast(
+                new LoggingHandler(LogLevel.INFO),
+                new HexDumpProxyFrontendHandler(remoteHost, remotePort));
     }
 }
