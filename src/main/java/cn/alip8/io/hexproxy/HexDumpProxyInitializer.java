@@ -9,13 +9,13 @@ import io.netty.handler.logging.LoggingHandler;
  * @author: Yao Shuai
  * @date: 2021/5/17 20:15
  */
-public class HexDumpProxyuInitializer extends ChannelInitializer<SocketChannel> {
+public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
 
     private final String remoteHost;
 
     private final int remotePort;
 
-    public HexDumpProxyuInitializer(String remoteHost, int remotePort) {
+    public HexDumpProxyInitializer(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
     }

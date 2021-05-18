@@ -1,5 +1,4 @@
 package cn.alip8.io.hexproxy;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -9,40 +8,40 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOption;
 
-/**
- * @author: Yao Shuai
- * @date: 2021/5/17 20:20
- */
-public class HexDumpProxyFrountendHandler extends ChannelInboundHandlerAdapter {
+public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     private final String remoteHost;
     private final int remotePort;
 
+    // As we use inboundChannel.eventLoop() when building the Bootstrap this does not need to be volatile as
+    // the outboundChannel will use the same EventLoop (and therefore Thread) as the inboundChannel.
     private Channel outboundChannel;
 
-    public HexDumpProxyFrountendHandler(String remoteHost, int remotePort) {
+    public HexDumpProxyFrontendHandler(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         final Channel inboundChannel = ctx.channel();
-        // Connection remote service
+
+        // Start the connection attempt.
         Bootstrap b = new Bootstrap();
         b.group(inboundChannel.eventLoop())
                 .channel(ctx.channel().getClass())
                 .handler(new HexDumpProxyBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture f = b.connect(remoteHost, remotePort).sync();
+        ChannelFuture f = b.connect(remoteHost, remotePort);
         outboundChannel = f.channel();
-
         f.addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
+            public void operationComplete(ChannelFuture future) {
                 if (future.isSuccess()) {
+                    // connection complete start to read first data
                     inboundChannel.read();
                 } else {
+                    // Close the connection if the connection attempt has failed.
                     inboundChannel.close();
                 }
             }
@@ -54,8 +53,9 @@ public class HexDumpProxyFrountendHandler extends ChannelInboundHandlerAdapter {
         if (outboundChannel.isActive()) {
             outboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                 @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
+                public void operationComplete(ChannelFuture future) {
                     if (future.isSuccess()) {
+                        // was able to flush out data, start to read the next chunk
                         ctx.channel().read();
                     } else {
                         future.channel().close();
@@ -66,19 +66,22 @@ public class HexDumpProxyFrountendHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
         if (outboundChannel != null) {
             closeOnFlush(outboundChannel);
         }
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        closeOnFlush(outboundChannel);
+        closeOnFlush(ctx.channel());
     }
 
-    public static void closeOnFlush(Channel ch) {
+    /**
+     * Closes the specified channel after all queued write requests are flushed.
+     */
+    static void closeOnFlush(Channel ch) {
         if (ch.isActive()) {
             ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         }
