@@ -11,8 +11,8 @@ import io.netty.handler.logging.LoggingHandler;
 public final class HexDumpProxy {
 
     static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "8084"));
-    static final String REMOTE_HOST = System.getProperty("remoteHost", "119.29.197.61");
-    static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "9090"));
+    static final String REMOTE_HOST = System.getProperty("remoteHost", "127.0.0.1");
+    static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "8080"));
 
     public static void main(String[] args) throws Exception {
         System.err.println("Proxying *:" + LOCAL_PORT + " to " + REMOTE_HOST + ':' + REMOTE_PORT + " ...");
