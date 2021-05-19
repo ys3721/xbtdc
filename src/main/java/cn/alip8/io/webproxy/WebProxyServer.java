@@ -24,9 +24,9 @@ public class WebProxyServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
-                    .handler(new WebProxyInitiailzer())
-                    .option(ChannelOption.SO_BACKLOG, 150);
-                    //.childHandler(ChannelOption.AUTO_READ, false);
+                    .childHandler(new WebProxyInitializer())
+                    .option(ChannelOption.SO_BACKLOG, 150)
+                    .childOption(ChannelOption.AUTO_READ, false);
             b.bind(localPort).sync().channel().closeFuture().sync();
         } finally {
             boss.shutdownGracefully();
