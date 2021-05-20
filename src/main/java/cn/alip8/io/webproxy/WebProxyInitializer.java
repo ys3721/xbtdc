@@ -20,8 +20,16 @@ public class WebProxyInitializer extends ChannelInitializer<SocketChannel> {
     // the outboundChannel will use the same EventLoop (and therefore Thread) as the inboundChannel.
     private Channel outboundChannel;
 
+    public WebProxyInitializer(String remoteHost, int remotePort) {
+        this.remoteHost = remoteHost;
+        this.remotePort = remotePort;
+    }
+
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE), new LoggingHandler(LogLevel.INFO), new WebProxyFrontendHandler());
+        ch.pipeline().addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE),
+                new LoggingHandler(LogLevel.INFO),
+                new WebProxyFrontendHandler(remoteHost, remotePort));
     }
+
 }
