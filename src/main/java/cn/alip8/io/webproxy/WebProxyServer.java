@@ -13,8 +13,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class WebProxyServer {
 
     private static int localPort = Integer.parseInt(System.getProperty("localport", "8899"));
-    private static int remotePort = Integer.parseInt(System.getProperty("remotePort", "80"));
-    private static String remoteAddress = System.getProperty("remoteAddress", "www.baidu.com");
+    private static int remotePort = Integer.parseInt(System.getProperty("remotePort", "9090"));
+    private static String remoteAddress = System.getProperty("remoteAddress", "119.29.197.61");
 
     public static void main(String[] args) throws Exception {
         EventLoopGroup boss = new NioEventLoopGroup(1);
