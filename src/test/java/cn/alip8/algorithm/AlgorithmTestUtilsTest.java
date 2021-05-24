@@ -15,7 +15,7 @@ public class AlgorithmTestUtilsTest {
     @Test
     public void testGeneralArray() {
         Random random = new Random();
-        int maxLen = random.nextInt(100000);
+        int maxLen = random.nextInt(10000);
         int maxValue = Math.abs(random.nextInt());
         boolean needNegative = Math.random() > 0.5f;
         for (int j = 0; j < 1; j++) {

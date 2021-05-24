@@ -10,7 +10,7 @@ public class TestCyclicBarrierSolver {
 
     @Test
     public void testSolver() {
-        int[][] matrix = new int[1500][1500];
+        int[][] matrix = new int[150][150];
         for (int i = 0 ; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 matrix[i][j] = (int) (Math.random() * 10000);

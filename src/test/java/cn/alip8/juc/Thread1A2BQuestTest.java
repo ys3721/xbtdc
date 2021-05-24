@@ -23,7 +23,7 @@ public class Thread1A2BQuestTest {
     public void testAltExec() throws Exception {
         Thread1A2B3CQuestion question = new Thread1A2B3CQuestion();
 
-        int printLength = 10000;
+        int printLength = 100;
         long beginTime = System.currentTimeMillis();
         System.setOut(new PrintStream(outContent1));
         question.singleThreadImpl(printLength);
