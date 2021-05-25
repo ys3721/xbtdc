@@ -1,8 +1,8 @@
 package cn.alip8.io.webproxy;
 
 import io.netty.bootstrap.Bootstrap;
-<<<<<<< HEAD
 import io.netty.channel.*;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * @author yaoshuai
@@ -13,30 +13,6 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
     private String remoteHost;
 
     private int remotePort;
-=======
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.nio.charset.StandardCharsets;
-
-/**
- * @author: Yao Shuai
- * @date: 2021/5/20 15:40
- */
-public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
-
-    private final String remoteHost;
-    private final int remotePort;
-
-    private NioSocketChannel outboundChannel;
->>>>>>> 53cd2a7f6b4509853ba8c7eca6a5df712b698895
 
     public WebProxyFrontendHandler(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
@@ -45,14 +21,12 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-<<<<<<< HEAD
         Bootstrap b = new Bootstrap();
         b.group(ctx.channel().eventLoop())
                 .channel(ctx.channel().getClass())
                 .handler(null)
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture f = b.connect(remoteHost, remotePort);
-=======
         //in bound channel
         final NioSocketChannel channel = (NioSocketChannel) ctx.channel();
         //connect target web, called outbound channel

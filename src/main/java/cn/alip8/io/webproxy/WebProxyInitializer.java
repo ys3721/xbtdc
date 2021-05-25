@@ -27,12 +27,7 @@ public class WebProxyInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-<<<<<<< HEAD
         ch.pipeline().addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE), new LoggingHandler(LogLevel.INFO),
-=======
-        ch.pipeline().addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE),
-                new LoggingHandler(LogLevel.INFO),
->>>>>>> 53cd2a7f6b4509853ba8c7eca6a5df712b698895
                 new WebProxyFrontendHandler(remoteHost, remotePort));
     }
 
