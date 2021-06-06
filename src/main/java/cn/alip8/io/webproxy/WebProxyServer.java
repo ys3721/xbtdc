@@ -27,7 +27,9 @@ public class WebProxyServer {
                     .childHandler(new WebProxyInitializer(remoteAddress, remotePort))
                     .option(ChannelOption.SO_BACKLOG, 150)
                     .childOption(ChannelOption.AUTO_READ, false);
-            b.bind(localPort).sync().channel().closeFuture().sync();
+            b.bind(localPort);
+            b.bind(8090).sync();
+
         } finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();

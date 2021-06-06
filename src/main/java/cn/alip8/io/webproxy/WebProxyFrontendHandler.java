@@ -1,8 +1,12 @@
 package cn.alip8.io.webproxy;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author yaoshuai
@@ -14,6 +18,8 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     private int remotePort;
 
+    private Channel outboundChannel;
+
     public WebProxyFrontendHandler(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
@@ -21,27 +27,20 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        //in bound channel
+        final NioSocketChannel inChannel = (NioSocketChannel) ctx.channel();
         Bootstrap b = new Bootstrap();
         b.group(ctx.channel().eventLoop())
                 .channel(ctx.channel().getClass())
                 .handler(null)
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture f = b.connect(remoteHost, remotePort);
-        //in bound channel
-        final NioSocketChannel channel = (NioSocketChannel) ctx.channel();
-        //connect target web, called outbound channel
-        Bootstrap b = new Bootstrap();
-        b.group(ctx.channel().eventLoop())
-                .channel(ctx.channel().getClass())
-                .handler(new WebProxyBackendHandler(channel))
-                .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture f = b.connect(remoteHost, remotePort);
-        outboundChannel = (NioSocketChannel) f.channel();
+        this.outboundChannel = (NioSocketChannel) f.channel();
         f.addListener((future) -> {
             if (future.isSuccess()) {
-                channel.read();
+                inChannel.read();
             } else {
-                channel.close();
+                inChannel.close();
             }
         });
     }
@@ -59,7 +58,7 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
         System.out.print(new String(bs, StandardCharsets.UTF_8));
         ByteBuf needWrite = ctx.alloc().buffer(bs.length);
         needWrite.writeBytes(needWrite);
-        outboundChannel.writeAndFlush(needWrite).addListener(new ChannelFutureListener() {
+        this.outboundChannel.writeAndFlush(needWrite).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
@@ -92,6 +91,5 @@ public class WebProxyFrontendHandler extends ChannelInboundHandlerAdapter {
         if (ch.isActive()) {
             ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         }
->>>>>>> 53cd2a7f6b4509853ba8c7eca6a5df712b698895
     }
 }
