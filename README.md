@@ -12,3 +12,4 @@
 
 ##关于git的一点备忘
 https://stackoverflow.com/questions/1783405/how-do-i-check-out-a-remote-git-branch
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build test.go
